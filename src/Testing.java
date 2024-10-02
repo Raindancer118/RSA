@@ -5,7 +5,8 @@ In dieser Klasse werden Tests für die Methoden in anderen Klassen durchgeführt
  */
 public class Testing {
     public static void main(String[] args) {
-        System.out.println(RSAToolkit.extendedEuklid(595,420));
+        PrimeKit primeKit = new PrimeKit(7,11);
+        RSAToolkit.squareMultiply(42,13,77);
     }
 
     public static void printEuklidLists(ArrayList<Long> a,ArrayList<Long> b,ArrayList<Long> r,ArrayList<Long> s,ArrayList<Long> t) {

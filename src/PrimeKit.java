@@ -7,6 +7,7 @@ public class PrimeKit {
     private long n;
     private long e;
     private long phiN;
+    private long d;
 
     public PrimeKit(long p, long q) {
         System.out.println("PrimeKit: Started Generation ... ");
@@ -19,8 +20,18 @@ public class PrimeKit {
         this.phiN = P*Q;
         System.out.println("PrimeKit: Now generating 'E'...");
         this.e = teilerfremdeZahl(phiN);
+        System.out.println("PrimeKit: Now generating 'D'...");
+        this.d = multiplikativInverse();
         long endtime = System.currentTimeMillis();
         System.out.println("PrimeKit: Finished generating. Took "+(endtime-startTime)+" ms.");
+    }
+
+    public long multiplikativInverse(){
+        System.out.println("MultiplikativInverse: Started search ... ");
+        d = RSAToolkit.extendedEuklid(phiN,e);
+        if (d <= 0) d += phiN;
+        System.out.println("MultiplikativInverse: Found "+d+".");
+        return d;
     }
 
     private long teilerfremdeZahl(long zuZahl){
@@ -94,5 +105,9 @@ public class PrimeKit {
 
     public long getE() {
         return e;
+    }
+
+    public long getD() {
+        return d;
     }
 }

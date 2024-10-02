@@ -2,13 +2,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class RSAToolkit {
-//    public static Message encrypt(Message m) {
-//
-//    }
-//
-//    public static Message decrypt(Message m) {
-//
-//    }
 
     public static boolean fermat(long n) {
         for (long i = 1; i < n-1/2*n; i++) {
@@ -52,46 +45,56 @@ public class RSAToolkit {
         return biggest;
     }
 
-    public static long squareMultiply(long a, long b, long n) {
-        long rest = 0;
+    public static long squareMultiply(long basis, long potenz, long modulo) {
         ArrayList<Long> zweierPotenzen = new ArrayList<>();
-        ArrayList<Long> toAdd = new ArrayList<>();
-        long result = a;
-        long potenz = 20;
-        long c = (long) Math.pow(2,potenz);
-        while (potenz >= 0) {
-            long d = b-c;
-            if (d >= 0) {
-                zweierPotenzen.add(potenz);
-                b = d;
+        ArrayList<Long> einmalAlle = new ArrayList<>();
+        ArrayList<Long> Calculations = new ArrayList<>();
+        ArrayList<Long> selectedCalculations = new ArrayList<>();
+        long addUp = 1;
+
+        // Zerlegung in Zweierpotenzen:
+        long rest = potenz;
+        while (rest != 0) {
+            for (long i = potenz; i >= 0; i--) {
+                if (potenz - Math.pow(2, i) >= 0) {
+                    einmalAlle.add(i);
+                }
             }
-            potenz--;
-            c = (long) Math.pow(2,potenz);
-        }
-        potenz = 20;
-        long letztesErgebnis = a;
-        for (int e = 1; e <= 20; e++) {
-            letztesErgebnis = ((long) Math.pow(2,potenz) * a)%n;
-            if (zweierPotenzen.contains(e)) {
-                toAdd.add(letztesErgebnis);
+            for (long num = potenz; num >= 0; num--){
+                if (rest - Math.pow(2, num) >= 0) {
+                    zweierPotenzen.add(num);
+                    rest = (long) (rest - Math.pow(2L,num));
+                }
             }
         }
-        for (int i = 0; i < toAdd.size(); i++) {
-            result = result * toAdd.get(i);
+        Calculations.add(basis%modulo);
+        for (int i = 1; i < einmalAlle.size(); i++) {
+            long last = Calculations.getLast();
+            long result = (long)Math.pow(last,2)%modulo;
+            Calculations.add(result);
         }
-        result = result % n;
-        return result;
+        for (int i = 0; i < einmalAlle.size(); i++) {
+            if (zweierPotenzen.contains(einmalAlle.get(i))){
+                selectedCalculations.add(Calculations.get(Calculations.size()-i-1));
+            }
+        }
+        for (int i = 0; i < selectedCalculations.size(); i++) {
+            addUp = selectedCalculations.get(i) * addUp;
+        }
+        addUp = addUp % modulo;
+        return addUp;
     }
 
     public static long getSomeRandomPrimes(Settings settings) {
         Random random = new Random();
         long tryNum = random.nextLong(settings.getKeySize());
-        while (tryNum < 1000) tryNum = random.nextLong(settings.getKeySize());
+        while (tryNum < 10) tryNum = random.nextLong(settings.getKeySize());
         while (!fermat(tryNum)){
             System.out.println("Picking another number bc "+tryNum+" was not a prime."
             );
             tryNum = random.nextLong(settings.getKeySize());
         }
+        System.out.println("Picked "+tryNum+" as prime.");
         return tryNum;
     }
 
