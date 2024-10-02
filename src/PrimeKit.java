@@ -110,4 +110,10 @@ public class PrimeKit {
     public long getD() {
         return d;
     }
+
+    public void deletePQPhiN(){
+        this.phiN = 0;
+        this.p = 0;
+        this.q = 0;
+    }
 }

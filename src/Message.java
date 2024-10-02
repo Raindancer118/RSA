@@ -1,5 +1,3 @@
-import java.security.PublicKey;
-
 public class Message {
     private long m;
     private long c;
@@ -46,5 +44,13 @@ public class Message {
 
     public void setC(long c) {
         this.c = c;
+    }
+
+    public Person getFrom() {
+        return from;
+    }
+
+    public Person getTo() {
+        return to;
     }
 }

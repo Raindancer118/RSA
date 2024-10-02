@@ -1,5 +1,3 @@
-import java.security.PublicKey;
-
 public class Person {
     private long[] privateKey = new long[2];
     private long[] publicKey = new long[2];
@@ -7,18 +5,18 @@ public class Person {
     private long prime1;
     private long prime2;
     private PrimeKit pk;
-    private long d;
 
     public Person(String name) {
         this.name = name;
         prepareLaunch();
     }
 
-    public void encrypt(Message m, Person recipient) {
+    public void encrypt(Message m) {
         System.out.println("Starting encryption of Message "+m.getM());
-        long[] publicKey = recipient.publicKey;
+        Person recipient = m.getTo();
+        long[] key = recipient.publicKey;
         long encrypt = m.getM();
-        long encrypted = RSAToolkit.squareMultiply(encrypt, publicKey[1], publicKey[0]);
+        long encrypted = RSAToolkit.squareMultiply(encrypt, key[1], key[0]);
         m.setM(encrypted);
         m.setC(encrypted);
         m.setEncrypted(true);
@@ -27,9 +25,9 @@ public class Person {
 
     public void decrypt(Message m) {
         System.out.println("Starting decryption of encrypted Message "+m.getC());
-        long[] privateKey = this.privateKey;
+        long[] key = this.privateKey;
         long decrypt = m.getC();
-        long decrypted = RSAToolkit.squareMultiply(decrypt, privateKey[1], privateKey[0]);
+        long decrypted = RSAToolkit.squareMultiply(decrypt, key[1], key[0]);
         m.setM(decrypted);
         m.setEncrypted(false);
         System.out.println("Decrypted Message as: "+decrypted);
@@ -64,6 +62,11 @@ public class Person {
         this.privateKey[1] = pk.getD();
         System.out.println(name+"'s Private Key: (" + privateKey[0]+","+privateKey[1]+")");
         System.out.println("Finished preparing Launch. Took "+(System.currentTimeMillis()-startTime)+" ms");
+
+        // löschen der Werte im PrimeKit:
+        pk.deletePQPhiN();
+        prime1 = 0;
+        prime2 = 0;
     }
 
     public void printKeys(){
