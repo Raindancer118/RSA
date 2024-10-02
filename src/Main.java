@@ -17,7 +17,7 @@ public class Main {
         Person Alice = new Person("Alice");
 
         Message firstMessage = new Message(32,Bob,Alice);
-        Bob.encrypt(firstMessage,Alice);
+        Bob.encrypt(firstMessage);
         Alice.decrypt(firstMessage);
 
         // Checkups:
