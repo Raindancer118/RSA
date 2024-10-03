@@ -3,16 +3,20 @@ import java.util.Random;
 
 public class RSAToolkit {
 
+
+
+
     public static boolean fermat(long n) {
+        //Diese methode macht den Fermat-test um zu überprüfen ob n eine Primzahl ist.
         for (long i = 1; i < n-1/2*n; i++) {
-            double currentProgress = ((double) i / (n-1/2*n))*100;
+            double currentProgress = ((double) i / (n-1/2*n)*100);
             System.out.println("fermat: Current Progress: "+currentProgress+" %");
             ArrayList<Long> had = new ArrayList<>();
             Random random = new Random();
-            long a = random.nextLong(n);
+            long a = random.nextLong(n); //erstellung zufälliger Zahl
             if (n != 1) {
-                while (a == 0 || had.contains(a)) a = random.nextLong(n);
-                if (euklid(n, a) != 1) return false;
+                while (a == 0 || had.contains(a)) a = random.nextLong(n); //erstellt neu zahl wenn a==0 oder schon in der liste ist.
+                if (euklid(n, a) != 1) return false;    //ggt muss 1 sein sonst keine Primzahl
                 had.add(a);
             }
             else return false;
@@ -21,6 +25,7 @@ public class RSAToolkit {
     }
 
     public static long euklid(long n1, long n2) {
+        // eine Methode die den GGT von 2 zahlen bestimmt.
         long a;
         long b;
         a = Math.max(n1, n2);
@@ -36,6 +41,8 @@ public class RSAToolkit {
     }
 
     public static long getBiggest(ArrayList<Long> a) {
+        // no usages :(
+        //Gibt aus einer ArrayList die größte Zahl aus.
         long biggest = a.get(0);
         for (int i = 1; i < a.size(); i++) {
             if (a.get(i) > biggest) {
@@ -46,6 +53,7 @@ public class RSAToolkit {
     }
 
     public static long squareMultiply(long basis, long potenz, long modulo) {
+        //Berechnet das ergebniss einer hohen Potenz kombinert mit einem Modulo
         ArrayList<Long> zweierPotenzen = new ArrayList<>();
         ArrayList<Long> einmalAlle = new ArrayList<>();
         ArrayList<Long> Calculations = new ArrayList<>();
@@ -86,10 +94,11 @@ public class RSAToolkit {
     }
 
     public static long getSomeRandomPrimes(Settings settings) {
+        //Erstellt eine Primzahl mit "settings" als Zahlen-obergrenze
         Random random = new Random();
         long tryNum = random.nextLong(settings.getKeySize());
-        while (tryNum < 10) tryNum = random.nextLong(settings.getKeySize());
-        while (!fermat(tryNum)){
+        while (tryNum < 10) tryNum = random.nextLong(settings.getKeySize()); //Random Zahl muss größer als 10 sein
+        while (!fermat(tryNum)){    //neue zahl bis fermat bestanden, dann also wahrscheinlich primzahl
             System.out.println("Picking another number bc "+tryNum+" was not a prime."
             );
             tryNum = random.nextLong(settings.getKeySize());
@@ -99,6 +108,7 @@ public class RSAToolkit {
     }
 
     public static long extendedEuklid(long n1, long n2) {
+        // Berechnet T des EEA von 2 zahlen
         ArrayList<Long> aSpalte = new ArrayList<>();
         ArrayList<Long> bSpalte = new ArrayList<>();
         ArrayList<Long> qSpalte = new ArrayList<>();
